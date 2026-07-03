@@ -5,374 +5,227 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aura Atlas | Personal Energetic Blueprint</title>
     
-    <!-- 性能优化 - 使用 preconnect 提前连接 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     
-    <!-- 引入 EmailJS SDK -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     
     <style>
-        /* ================= 核心变量与基础重置 ================= */
+        /* ================= Core Variables ================= */
         :root {
             --bg-dark: #0a0a1a; 
             --bg-light: #121224; 
             --bg-nav: rgba(10, 10, 26, 0.9);
             --accent-gold: #d4a574; 
-            --accent-gold-hover: #b88a5b;
             --text-primary: #eaeaea; 
             --text-secondary: #a0a0b0; 
             --font-heading: 'Playfair Display', serif;
             --font-body: 'Inter', sans-serif;
             --border-subtle: rgba(212, 165, 116, 0.2);
-            --transition-slow: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
             --transition-fast: all 0.3s ease;
             --focus-ring: 2px solid var(--accent-gold);
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            scroll-behavior: smooth;
-        }
-
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-primary);
-            font-family: var(--font-body);
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-            overflow-x: hidden;
-            background-image: radial-gradient(circle at 50% 0%, #15152a 0%, #0a0a1a 80%);
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+        body { background-color: var(--bg-dark); color: var(--text-primary); font-family: var(--font-body); line-height: 1.6; overflow-x: hidden; background-image: radial-gradient(circle at 50% 0%, #15152a 0%, #0a0a1a 80%); }
         body.mobile-menu-open { overflow: hidden; }
-
-        h1, h2, h3, h4 {
-            font-family: var(--font-heading);
-            font-weight: 400;
-            letter-spacing: 0.02em;
-        }
-
+        h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 400; letter-spacing: 0.02em; }
         a { text-decoration: none; color: inherit; }
-
-        a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible {
-            outline: var(--focus-ring);
-            outline-offset: 4px;
-            border-radius: 2px;
-        }
-
-        section {
-            padding: 100px 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        /* ================= 组件样式 ================= */
-        .btn {
-            display: inline-block;
-            padding: 14px 32px;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            cursor: pointer;
-            border: 1px solid var(--accent-gold);
-            background: transparent;
-            color: var(--accent-gold);
-            transition: var(--transition-fast);
-            border-radius: 2px;
-            font-family: var(--font-body);
-        }
-
+        a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible { outline: var(--focus-ring); outline-offset: 4px; border-radius: 2px; }
+        section { padding: 100px 20px; max-width: 1200px; margin: 0 auto; }
+        /* Buttons */
+        .btn { display: inline-block; padding: 14px 32px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.1em; cursor: pointer; border: 1px solid var(--accent-gold); background: transparent; color: var(--accent-gold); transition: var(--transition-fast); border-radius: 2px; font-family: var(--font-body); }
         .btn:hover:not(:disabled) { background: var(--accent-gold); color: var(--bg-dark); }
         .btn:disabled { opacity: 0.6; cursor: not-allowed; }
         .btn-solid { background: var(--accent-gold); color: var(--bg-dark); }
         .btn-solid:hover:not(:disabled) { background: transparent; color: var(--accent-gold); }
-
         .section-header { text-align: center; margin-bottom: 60px; }
         .section-header h2 { font-size: 2.5rem; margin-bottom: 15px; color: var(--accent-gold); }
         .section-header p { color: var(--text-secondary); max-width: 600px; margin: 0 auto; }
-
-        /* ================= 导航�?================= */
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 30px 50px;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            background: var(--bg-nav);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            transition: var(--transition-fast);
-        }
-
+        /* Nav */
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 30px 50px; position: fixed; width: 100%; top: 0; z-index: 1000; background: var(--bg-nav); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.05); }
         .logo { font-family: var(--font-heading); font-size: 1.5rem; letter-spacing: 0.15em; color: var(--accent-gold); }
-
-        .menu-toggle {
-            display: none; font-size: 1.8rem; color: var(--accent-gold); cursor: pointer;
-            z-index: 1001; user-select: none; background: transparent; border: none;
-        }
-
+        .menu-toggle { display: none; font-size: 1.8rem; color: var(--accent-gold); cursor: pointer; background: transparent; border: none; }
         .nav-links { display: flex; gap: 40px; }
-        .nav-links a { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-primary); transition: var(--transition-fast); position: relative; }
+        .nav-links a { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-primary); transition: var(--transition-fast); }
         .nav-links a:hover, .nav-links a.active { color: var(--accent-gold); }
-
-        .nav-links.active {
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-            background: rgba(10, 10, 26, 0.98); z-index: 1000; gap: 40px;
-            opacity: 0; animation: fadeIn 0.3s forwards;
-        }
-        .nav-links.active a { font-size: 1.5rem; }
-
-        /* ================= 英雄�?(Hero) ================= */
-        .hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 20px; margin-top: 0; background-image: linear-gradient(rgba(10, 10, 26, 0.7), rgba(10, 10, 26, 0.9)), url('https://images.unsplash.com/photo-1618220179428-22790b461013?q=80&w=2000&auto=format&fit=crop'); background-size: cover; background-position: center; }
-        .hero h1 { font-size: 3.5rem; max-width: 900px; line-height: 1.2; margin-bottom: 20px; animation: fadeUp 1.5s ease; }
+        /* Hero */
+        .hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 20px; background-image: linear-gradient(rgba(10, 10, 26, 0.7), rgba(10, 10, 26, 0.9)), url('https://images.unsplash.com/photo-1618220179428-22790b461013?q=80&w=2000&auto=format&fit=crop'); background-size: cover; background-position: center; }
+        .hero h1 { font-size: 3.5rem; max-width: 900px; line-height: 1.2; margin-bottom: 20px; animation: fadeUp 1.5s ease; text-shadow: 0 4px 20px rgba(0,0,0,0.5); }
         .hero p { font-size: 1.1rem; color: var(--text-secondary); max-width: 600px; margin-bottom: 40px; animation: fadeUp 2s ease; }
         .hero-btns { display: flex; gap: 20px; animation: fadeUp 2.5s ease; }
-
-        /* ================= 怎么运作 (How It Works) ================= */
-        .steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; text-align: center; }
-        .step-card { padding: 40px 20px; border: 1px solid var(--border-subtle); background: var(--bg-light); transition: var(--transition-slow); }
-        .step-card:hover { transform: translateY(-5px); border-color: var(--accent-gold); }
-        .step-number { font-family: var(--font-heading); font-size: 2rem; color: var(--accent-gold); margin-bottom: 15px; font-style: italic; }
-        .disclaimer-text { text-align: center; margin-top: 50px; font-size: 0.9rem; color: var(--text-secondary); font-style: italic; border-top: 1px solid var(--border-subtle); padding-top: 30px; max-width: 800px; margin-left: auto; margin-right: auto; }
-
-        /* ================= 你将发现什�?================= */
-        .discover-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-        .discover-item { padding: 30px; border-left: 2px solid var(--accent-gold); background: linear-gradient(90deg, rgba(212,165,116,0.05) 0%, transparent 100%); }
-        .discover-item h3 { margin-bottom: 10px; font-size: 1.2rem; }
-        .discover-item p { font-size: 0.9rem; color: var(--text-secondary); }
-
-        /* ================= 互动测试�?================= */
-        .quiz-section { background: var(--bg-light); border: 1px solid var(--border-subtle); padding: 80px 40px; text-align: center; position: relative; overflow: hidden; }
-        .quiz-container { max-width: 600px; margin: 0 auto; }
+        /* Ticker Bar (NEW UPGRADE 1) */
+        .ticker-wrap { width: 100%; overflow: hidden; background-color: var(--accent-gold); color: var(--bg-dark); padding: 10px 0; position: relative; }
+        .ticker { display: inline-block; white-space: nowrap; animation: ticker 25s linear infinite; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.15em; font-weight: 600; }
+        .ticker-item { padding: 0 2rem; }
+        @keyframes ticker { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-50%, 0, 0); } }
+        /* Comparison Chart (NEW UPGRADE 2) */
+        .comparison-section { background: var(--bg-light); border-bottom: 1px solid var(--border-subtle); }
+        .compare-grid { display: grid; grid-template-columns: 1fr 1fr; max-width: 900px; margin: 0 auto; border: 1px solid var(--border-subtle); border-radius: 4px; }
+        .compare-col { padding: 40px; }
+        .compare-col.aura { background: rgba(212, 165, 116, 0.05); }
+        .compare-header { font-family: var(--font-heading); font-size: 1.5rem; margin-bottom: 30px; text-align: center; }
+        .compare-aura { color: var(--accent-gold); }
+        .compare-list { list-style: none; }
+        .compare-list li { margin-bottom: 20px; display: flex; align-items: flex-start; gap: 15px; font-size: 0.95rem; }
+        .icon-check { color: #4CAF50; font-weight: bold; }
+        .icon-cross { color: #ff6b6b; font-weight: bold; }
+        /* Quiz */
+        .quiz-section { text-align: center; }
+        .quiz-container { max-width: 600px; margin: 0 auto; background: var(--bg-light); border: 1px solid var(--border-subtle); padding: 50px 30px; }
         .quiz-progress { font-size: 0.8rem; color: var(--accent-gold); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 20px; }
         .quiz-step { display: none; opacity: 0; animation: fadeInStep 0.5s ease forwards; }
         .quiz-step.active { display: block; }
-
         @keyframes fadeInStep { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
         .quiz-options { display: flex; flex-direction: column; gap: 15px; margin-top: 30px; }
-        .quiz-option { background: transparent; border: 1px solid var(--border-subtle); color: var(--text-primary); padding: 15px; cursor: pointer; transition: var(--transition-fast); font-family: var(--font-body); text-align: left; }
+        .quiz-option { background: transparent; border: 1px solid var(--border-subtle); color: var(--text-primary); padding: 15px; cursor: pointer; text-align: left; }
         .quiz-option:hover { border-color: var(--accent-gold); background: rgba(212, 165, 116, 0.05); }
         .quiz-result { display: none; }
         .result-element { font-family: var(--font-heading); font-size: 3rem; color: var(--accent-gold); margin: 20px 0; }
-        
         .email-capture { margin-top: 30px; display: flex; gap: 10px; justify-content: center; }
-        .email-capture input { padding: 12px 20px; width: 250px; background: transparent; border: 1px solid var(--border-subtle); color: #fff; font-family: var(--font-body); }
-        .email-capture input:focus { outline: none; border-color: var(--accent-gold); }
-
-        /* ================= 按意图购�?================= */
+        .email-capture input { padding: 12px 20px; width: 250px; background: transparent; border: 1px solid var(--border-subtle); color: #fff; }
+        /* Blueprint Interactive (NEW UPGRADE 3) */
+        .blueprint-interactive { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; max-width: 1000px; margin: 0 auto; }
+        .blueprint-image img { width: 100%; border-radius: 4px; border: 1px solid var(--border-subtle); filter: contrast(110%) grayscale(20%); }
+        .blueprint-accordion { display: flex; flex-direction: column; gap: 15px; }
+        .bp-item { border: 1px solid var(--border-subtle); background: var(--bg-light); padding: 20px; cursor: pointer; transition: 0.3s; }
+        .bp-item.active { border-color: var(--accent-gold); background: rgba(212, 165, 116, 0.05); }
+        .bp-title { font-family: var(--font-heading); font-size: 1.2rem; color: var(--text-primary); margin-bottom: 5px; }
+        .bp-item.active .bp-title { color: var(--accent-gold); }
+        .bp-desc { font-size: 0.9rem; color: var(--text-secondary); max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .bp-item.active .bp-desc { max-height: 100px; margin-top: 10px; }
+        /* Shop (UPGRADED) */
         .shop-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
-        .shop-card { background: var(--bg-light); border: 1px solid var(--border-subtle); padding: 40px 20px; text-align: center; transition: var(--transition-slow); cursor: pointer; display: flex; flex-direction: column; align-items: center; }
-        .shop-card:hover { border-color: var(--accent-gold); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .intention-title { font-family: var(--font-heading); font-size: 1.5rem; font-style: italic; margin-bottom: 10px; }
-        .product-name { color: var(--accent-gold); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.1em; margin: 20px 0 10px; }
-        
-        .waitlist-form { width: 100%; margin-top: 15px; display: none; flex-direction: column; gap: 10px; animation: fadeIn 0.3s ease; }
-
-        /* ================= 报告层级 ================= */
-        .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; align-items: center; }
-        .price-card { border: 1px solid var(--border-subtle); padding: 50px 30px; text-align: center; background: var(--bg-light); display: flex; flex-direction: column; }
-        .price-card.popular { border-color: var(--accent-gold); transform: scale(1.05); position: relative; box-shadow: 0 0 40px rgba(212, 165, 116, 0.05); }
-        .popular-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--accent-gold); color: var(--bg-dark); padding: 4px 15px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: bold; white-space: nowrap; }
+        .shop-card { background: var(--bg-light); border: 1px solid var(--border-subtle); padding: 30px 20px; text-align: center; display: flex; flex-direction: column; align-items: center; }
+        .shop-img-wrapper { width: 100%; position: relative; margin-bottom: 20px; }
+        .shop-img-wrapper img { width: 100%; height: 220px; object-fit: cover; border-radius: 2px; }
+        .shop-tag { position: absolute; top: 10px; right: 10px; background: rgba(10,10,26,0.8); color: var(--accent-gold); padding: 4px 10px; font-size: 0.65rem; text-transform: uppercase; border: 1px solid var(--accent-gold); }
+        .shop-stars { color: var(--accent-gold); font-size: 0.8rem; margin-bottom: 10px; }
+        .intention-title { font-family: var(--font-heading); font-size: 1.3rem; font-style: italic; margin-bottom: 5px; }
+        .product-name { color: var(--accent-gold); font-size: 0.85rem; text-transform: uppercase; margin: 15px 0 5px; }
+        .price-wrap { margin-bottom: 15px; display: flex; gap: 10px; justify-content: center; }
+        .price-old { color: var(--text-secondary); text-decoration: line-through; font-size: 0.85rem; }
+        .scarcity-text { font-size: 0.7rem; color: #ff6b6b; margin-bottom: 10px; font-style: italic; }
+        /* Pricing */
+        .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+        .price-card { border: 1px solid var(--border-subtle); padding: 50px 30px; text-align: center; background: var(--bg-light); }
+        .price-card.popular { border-color: var(--accent-gold); transform: scale(1.05); position: relative; }
+        .popular-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--accent-gold); color: var(--bg-dark); padding: 4px 15px; font-size: 0.75rem; text-transform: uppercase; font-weight: bold; }
         .price { font-size: 2.5rem; font-family: var(--font-heading); color: var(--accent-gold); margin: 20px 0; }
-        .features { list-style: none; margin: 30px 0; text-align: left; font-size: 0.9rem; color: var(--text-secondary); flex-grow: 1; }
+        .features { list-style: none; margin: 30px 0; text-align: left; font-size: 0.9rem; color: var(--text-secondary); }
         .features li { margin-bottom: 15px; padding-left: 20px; position: relative; }
-        .features li::before { content: '�?; position: absolute; left: 0; color: var(--accent-gold); font-size: 0.8rem; }
-
-        /* ================= 信任�?================= */
-        .trust-section { border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle); padding: 80px 20px; text-align: center; background: linear-gradient(180deg, transparent 0%, rgba(212, 165, 116, 0.02) 100%); }
-        .trust-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-bottom: 60px; }
-        .trust-icon { font-size: 2rem; color: var(--accent-gold); margin-bottom: 15px; }
-        .culture-statement { max-width: 800px; margin: 0 auto; font-style: italic; color: var(--text-secondary); font-size: 0.95rem; }
-
-        /* ================= 评价�?================= */
-        .testimonial-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
-        .testimonial-card { padding: 40px 30px; background: var(--bg-light); border-left: 1px solid var(--accent-gold); }
-        .quote { font-family: var(--font-heading); font-size: 1.1rem; font-style: italic; margin-bottom: 20px; color: var(--text-primary); }
-        .author { font-size: 0.8rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; }
-
-        /* ================= FAQ �?================= */
+        .features li::before { content: '✦'; position: absolute; left: 0; color: var(--accent-gold); font-size: 0.8rem; }
+        /* Testimonials (NEW UPGRADE 4) */
+        .testimonial-masonry { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+        .tm-card { background: var(--bg-light); border: 1px solid var(--border-subtle); padding: 30px; display: flex; flex-direction: column; }
+        .tm-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
+        .tm-avatar { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; filter: grayscale(100%); }
+        .tm-stars { color: var(--accent-gold); font-size: 0.7rem; margin-bottom: 5px; }
+        .tm-author { font-size: 0.85rem; font-weight: 500; }
+        .tm-verified { color: #4CAF50; font-size: 0.7rem; }
+        .tm-quote { font-family: var(--font-heading); font-style: italic; font-size: 1.05rem; margin-bottom: 20px; flex-grow: 1; }
+        /* FAQ */
         .faq-item { border-bottom: 1px solid var(--border-subtle); padding: 25px 0; }
-        .faq-question { font-family: var(--font-heading); font-size: 1.2rem; display: flex; justify-content: space-between; align-items: center; color: var(--accent-gold); background: transparent; border: none; width: 100%; text-align: left; cursor: pointer; padding: 5px 0; }
+        .faq-question { font-family: var(--font-heading); font-size: 1.2rem; display: flex; justify-content: space-between; align-items: center; color: var(--accent-gold); background: transparent; border: none; width: 100%; text-align: left; cursor: pointer; }
         .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; color: var(--text-secondary); padding-right: 40px; font-size: 0.95rem; }
         .faq-item.active .faq-answer { max-height: 500px; margin-top: 15px; }
-        .faq-icon { transition: transform 0.3s ease; font-size: 1.5rem; }
-        .faq-item.active .faq-icon { transform: rotate(45deg); }
-
-        /* ================= 页脚内容�?================= */
+        /* Footer */
         .footer-page-content { max-width: 800px; margin: 0 auto; border-top: 1px solid var(--border-subtle); padding-top: 80px; }
-        .footer-page-content h3 { color: var(--accent-gold); margin-bottom: 20px; font-size: 1.5rem; }
-        .footer-page-content h4 { color: var(--text-primary); margin-bottom: 10px; font-family: var(--font-body); font-weight: 500; }
-        .form-input { padding: 12px 20px; background: transparent; border: 1px solid var(--border-subtle); color: #fff; font-family: var(--font-body); width: 100%; transition: var(--transition-fast); }
-        .form-input:focus { outline: none; border-color: var(--accent-gold); }
-
-        /* ================= 页脚 (Footer) ================= */
+        .form-input { padding: 12px 20px; background: transparent; border: 1px solid var(--border-subtle); color: #fff; width: 100%; margin-bottom: 15px; }
         footer { border-top: 1px solid var(--border-subtle); padding: 60px 50px 30px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 40px; }
         .footer-col h4 { color: var(--accent-gold); margin-bottom: 20px; font-size: 1.1rem; }
         .footer-col a { display: block; color: var(--text-secondary); margin-bottom: 10px; font-size: 0.9rem; transition: var(--transition-fast); }
         .footer-col a:hover { color: var(--text-primary); }
         .copyright { grid-column: 1 / -1; text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); color: var(--text-secondary); font-size: 0.8rem; }
-
-        /* ================= Toast 提示系统样式 ================= */
-        #toast-container { position: fixed; bottom: 30px; right: 30px; z-index: 9999; display: flex; flex-direction: column; gap: 15px; }
-        .toast { background: rgba(10, 10, 26, 0.95); border-left: 4px solid; color: var(--text-primary); padding: 16px 24px; border-radius: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); font-size: 0.9rem; backdrop-filter: blur(5px); opacity: 0; transform: translateX(100%); animation: toastSlideIn 0.3s forwards; display: flex; align-items: center; gap: 10px; }
         
-        /* 颜色控制 */
+        /* Toast */
+        #toast-container { position: fixed; bottom: 30px; right: 30px; z-index: 9999; display: flex; flex-direction: column; gap: 15px; }
+        .toast { background: rgba(10, 10, 26, 0.95); border-left: 4px solid; color: var(--text-primary); padding: 16px 24px; border-radius: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); font-size: 0.9rem; display: flex; align-items: center; gap: 10px; }
         .toast.success { border-left-color: #4CAF50; }
         .toast.error { border-left-color: #ff6b6b; }
         .toast.info { border-left-color: var(--accent-gold); }
-        
         .toast.hide { animation: toastSlideOut 0.3s forwards; }
         @keyframes toastSlideIn { to { opacity: 1; transform: translateX(0); } }
         @keyframes toastSlideOut { to { opacity: 0; transform: translateX(100%); } }
-
-        /* ================= Cookie Consent Banner ================= */
-        #cookie-banner {
-            position: fixed; bottom: 0; left: 0; width: 100%;
-            background: rgba(10, 10, 26, 0.98); border-top: 1px solid var(--border-subtle);
-            padding: 20px 50px; display: flex; justify-content: space-between; align-items: center;
-            z-index: 9998; transform: translateY(100%); transition: transform 0.5s ease;
-        }
-        #cookie-banner.show { transform: translateY(0); }
-
-        /* ================= 控制�?Debug 面板 ================= */
-        #debug-panel { position: fixed; bottom: 0; left: 0; width: 100%; height: 200px; background: rgba(0,0,0,0.95); border-top: 1px solid var(--accent-gold); color: #4CAF50; font-family: monospace; padding: 15px; z-index: 10000; overflow-y: auto; display: none; box-shadow: 0 -10px 30px rgba(0,0,0,0.5); }
-
-        /* ================= 动画与响应式 ================= */
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes fadeIn { to { opacity: 1; } }
-
         @media (max-width: 900px) {
-            .steps-grid, .discover-grid, .shop-grid, .pricing-grid, .trust-grid, .testimonial-grid { grid-template-columns: 1fr; }
-            .price-card.popular { transform: scale(1); }
+            .steps-grid, .shop-grid, .pricing-grid, .testimonial-masonry, .blueprint-interactive, .compare-grid { grid-template-columns: 1fr; }
             .hero h1 { font-size: 2.5rem; }
             footer { grid-template-columns: 1fr; text-align: center; }
             nav { padding: 20px 30px; }
             .menu-toggle { display: block; }
             .nav-links { display: none; }
-            .hero { padding-top: 100px; }
-            .hero-btns { flex-direction: column; }
+            .nav-links.active { display: flex; flex-direction: column; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: rgba(10,10,26,0.98); }
             .email-capture { flex-direction: column; }
             .email-capture input { width: 100%; }
             #toast-container { bottom: 20px; left: 20px; right: 20px; }
-            .toast { justify-content: center; text-align: center; }
-            #cookie-banner { flex-direction: column; gap: 15px; text-align: center; padding: 20px; }
-        }
-
-        @media (max-width: 360px) {
-            .hero h1 { font-size: 2rem; }
-            section { padding: 80px 15px; }
-            .price { font-size: 2rem; }
-            .popular-badge { padding: 4px 10px; font-size: 0.65rem; }
         }
     </style>
 </head>
 <body>
-
-    <!-- 导航�?-->
-    <nav id="main-nav">
+    <nav>
         <div class="logo">AURA ATLAS</div>
-        <button class="menu-toggle" id="menu-btn" aria-label="Toggle navigation menu" aria-expanded="false">�?/button>
+        <button class="menu-toggle" id="menu-btn">☰</button>
         <div class="nav-links" id="nav-links">
-            <a href="#shop" class="nav-item">Shop by Intention</a>
+            <a href="#shop" class="nav-item">Shop Crystals</a>
             <a href="#blueprint" class="nav-item">Your Blueprint</a>
             <a href="#quiz" class="nav-item">Energy Quiz</a>
-            <a href="#about" class="nav-item">About</a>
+            <a href="#about" class="nav-item">FAQ</a>
         </div>
     </nav>
-
-    <!-- 英雄�?-->
     <section class="hero" id="home">
-        <h1>We decode your energetic blueprint so you can make aligned, conscious choices.</h1>
+        <h1>We decode your energetic blueprint so you can make aligned choices.</h1>
         <p>Translating ancient Eastern archetypes into modern psychological tools for profound self-understanding. Not fate, but frequency.</p>
         <div class="hero-btns">
             <a href="#quiz" class="btn btn-solid">Discover Your Blueprint</a>
             <a href="#shop" class="btn">Shop by Intention</a>
         </div>
     </section>
-
-    <!-- 怎么运作 -->
-    <section id="how-it-works">
-        <div class="section-header">
-            <h2>The Process of Alignment</h2>
-            <p>A sophisticated methodology bridging ancient frameworks with modern introspection.</p>
+    <!-- UPGRADE 1: Ticker -->
+    <div class="ticker-wrap">
+        <div class="ticker">
+            <span class="ticker-item">✦ Psychological, Not Psychic</span>
+            <span class="ticker-item">✦ Ethically Sourced Crystals</span>
+            <span class="ticker-item">✦ 30-Day Clarity Guarantee</span>
+            <span class="ticker-item">✦ Rooted in Ancient Wisdom</span>
+            <span class="ticker-item">✦ Psychological, Not Psychic</span>
+            <span class="ticker-item">✦ Ethically Sourced Crystals</span>
+            <span class="ticker-item">✦ 30-Day Clarity Guarantee</span>
+            <span class="ticker-item">✦ Rooted in Ancient Wisdom</span>
         </div>
-        <div class="steps-grid">
-            <div class="step-card">
-                <div class="step-number">01</div>
-                <h3>Provide Birth Data</h3>
-                <p style="color: var(--text-secondary); margin-top: 10px; font-size: 0.9rem;">Submit your exact birth details to generate your unique energetic map based on Eastern astrological pillars.</p>
-            </div>
-            <div class="step-card">
-                <div class="step-number">02</div>
-                <h3>Receive Analysis</h3>
-                <p style="color: var(--text-secondary); margin-top: 10px; font-size: 0.9rem;">Read through a deep psychological decoding of your natural elements, relationship patterns, and inner frictions.</p>
-            </div>
-            <div class="step-card">
-                <div class="step-number">03</div>
-                <h3>Anchor Intention</h3>
-                <p style="color: var(--text-secondary); margin-top: 10px; font-size: 0.9rem;">Utilize our ethically sourced, element-specific crystals to visually and physically anchor your new awareness daily.</p>
-            </div>
+    </div>
+    <!-- UPGRADE 2: Comparison Chart -->
+    <section class="comparison-section">
+        <div class="section-header" style="margin-bottom: 40px;">
+            <h2>The Aura Atlas Difference</h2>
+            <p>Why modern minds are switching from horoscopes to energy blueprints.</p>
         </div>
-        <div class="disclaimer-text">
-            * This is not fortune telling. It is a tool for deep self-understanding rooted in ancient Eastern wisdom, designed to empower your free will, not predict your future.
-        </div>
-    </section>
-
-    <!-- 你将发现什�?-->
-    <section id="blueprint">
-        <div class="section-header">
-            <h2>What You'll Discover</h2>
-            <p>Your Personal Energetic Blueprint illuminates the subconscious structures shaping your reality.</p>
-        </div>
-        <div class="discover-grid">
-            <div class="discover-item">
-                <h3>Natural Gifts</h3>
-                <p>The innate talents and cognitive strengths you possess without effort.</p>
+        <div class="compare-grid">
+            <div class="compare-col">
+                <h3 class="compare-header" style="color: var(--text-secondary);">Fortune Telling</h3>
+                <ul class="compare-list">
+                    <li><span class="icon-cross">✕</span> Predicts predetermined destiny</li>
+                    <li><span class="icon-cross">✕</span> Creates fear and anxiety</li>
+                    <li><span class="icon-cross">✕</span> Strips away your free will</li>
+                </ul>
             </div>
-            <div class="discover-item">
-                <h3>Relationship Patterns</h3>
-                <p>Why you attract certain dynamics and how you naturally process intimacy.</p>
-            </div>
-            <div class="discover-item">
-                <h3>Career Alignment</h3>
-                <p>The environments and work structures where your energy thrives most.</p>
-            </div>
-            <div class="discover-item">
-                <h3>Hidden Challenges</h3>
-                <p>Subconscious energetic blockages causing recurring friction in your life.</p>
-            </div>
-            <div class="discover-item">
-                <h3>Life Themes</h3>
-                <p>The overarching archetypal lessons you are meant to navigate.</p>
-            </div>
-            <div class="discover-item">
-                <h3>Annual Energy Climate</h3>
-                <p>A forecast of the incoming elemental shifts, helping you prepare, not predict.</p>
+            <div class="compare-col aura">
+                <h3 class="compare-header compare-aura">The Energetic Blueprint</h3>
+                <ul class="compare-list">
+                    <li><span class="icon-check">✓</span> Analyzes psychological archetypes</li>
+                    <li><span class="icon-check">✓</span> Provides actionable, grounding insights</li>
+                    <li><span class="icon-check">✓</span> Empowers you to make conscious choices</li>
+                </ul>
             </div>
         </div>
     </section>
-
-    <!-- 互动测试�?-->
     <section id="quiz" class="quiz-section">
         <div class="quiz-container">
             <div class="section-header" style="margin-bottom: 30px;">
                 <h2>What Is Your Dominant Energy?</h2>
                 <p>Discover the frequency that naturally shapes your personality in just 3 questions.</p>
             </div>
-
-            <!-- Quiz Questions -->
             <div id="quiz-questions">
                 <div class="quiz-progress" id="quiz-progress">Question 1 of 3</div>
-
                 <div class="quiz-step active" id="step-1">
                     <h3 style="margin-bottom: 20px;">1. When faced with sudden conflict, your default internal reaction is to:</h3>
                     <div class="quiz-options">
@@ -381,7 +234,6 @@
                         <button class="quiz-option" data-element="Ocean">C. Absorb the emotional weight of the room and seek harmony.</button>
                     </div>
                 </div>
-                
                 <div class="quiz-step" id="step-2">
                     <h3 style="margin-bottom: 20px;">2. Which environment instantly recharges your mental battery?</h3>
                     <div class="quiz-options">
@@ -390,7 +242,6 @@
                         <button class="quiz-option" data-element="Forest">C. A secluded natural setting where you can completely unplug.</button>
                     </div>
                 </div>
-
                 <div class="quiz-step" id="step-3">
                     <h3 style="margin-bottom: 20px;">3. The recurring theme you struggle with most is:</h3>
                     <div class="quiz-options">
@@ -400,34 +251,56 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Quiz Result -->
             <div id="quiz-result" class="quiz-result">
                 <p style="text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-secondary);">Your Archetype is</p>
                 <div class="result-element" id="result-title"></div>
                 <p id="result-desc" style="margin-bottom: 20px; font-size: 0.95rem; color: var(--text-secondary);"></p>
-                
                 <div style="padding: 20px; border: 1px solid var(--border-subtle); display: inline-block; margin-bottom: 30px;">
                     <p style="font-size: 0.8rem; text-transform: uppercase; color: var(--accent-gold);">Recommended Anchor</p>
                     <p id="result-set" style="font-family: var(--font-heading); font-size: 1.2rem;"></p>
                 </div>
-
                 <p style="font-style: italic;">Enter your email to uncover your complete 20+ page Energetic Blueprint.</p>
-                
                 <div class="email-capture">
                     <input type="email" id="capture-email" placeholder="Your Email Address" required>
                     <button class="btn btn-solid" id="capture-btn">Unlock Full Blueprint</button>
                 </div>
-                <p id="email-success-note" style="display: none; font-size: 0.8rem; color: var(--text-secondary); margin-top: 10px;">We'll send your full reading to your inbox within 24 hours.</p>
-
                 <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border-subtle);">
                     <button class="btn" id="retake-quiz-btn" style="padding: 8px 20px; font-size: 0.8rem; opacity: 0.8;">Retake Quiz</button>
                 </div>
             </div>
         </div>
     </section>
-
-    <!-- 按意图购�?-->
+    <!-- UPGRADE 3: Blueprint Deep Dive Module -->
+    <section id="blueprint">
+        <div class="section-header">
+            <h2>Inside Your Blueprint</h2>
+            <p>A 20+ page profound psychological translation of your birth chart.</p>
+        </div>
+        <div class="blueprint-interactive">
+            <div class="blueprint-image">
+                <img src="https://images.unsplash.com/photo-1616422285623-13ff0162193c?q=80&w=800&auto=format&fit=crop" alt="Aura Atlas Digital Blueprint">
+            </div>
+            <div class="blueprint-accordion">
+                <div class="bp-item active" onclick="activateBp(this)">
+                    <div class="bp-title">The Natural Gifts</div>
+                    <div class="bp-desc" style="max-height: 100px; margin-top: 10px;">We decode the innate talents and cognitive strengths you possess without effort, explaining why certain tasks flow naturally.</div>
+                </div>
+                <div class="bp-item" onclick="activateBp(this)">
+                    <div class="bp-title">Relationship Patterns</div>
+                    <div class="bp-desc">Understand your subconscious attachment style. We map out why you attract certain dynamics and interact with others.</div>
+                </div>
+                <div class="bp-item" onclick="activateBp(this)">
+                    <div class="bp-title">Hidden Frictions</div>
+                    <div class="bp-desc">Identify the internal energetic blockages causing recurring friction in your life, giving you a framework to break cycles.</div>
+                </div>
+                <div class="bp-item" onclick="activateBp(this)">
+                    <div class="bp-title">Crystal Anchoring</div>
+                    <div class="bp-desc">Personalized recommendations for elemental stones that act as physical reminders to balance your energies.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- UPGRADE 4: Shop by Intention with Scarcity & Tags -->
     <section id="shop">
         <div class="section-header">
             <h2>Shop by Intention</h2>
@@ -435,47 +308,75 @@
         </div>
         <div class="shop-grid">
             <div class="shop-card">
+                <div class="shop-img-wrapper">
+                    <div class="shop-tag">For Anxiety</div>
+                    <img src="https://images.unsplash.com/photo-1590494165264-1ebe3602eb80?q=80&w=600&auto=format&fit=crop" alt="Ignite Set">
+                </div>
+                <div class="shop-stars">★★★★★</div>
                 <div class="intention-title">"I Need Courage"</div>
-                <p style="font-size: 0.85rem; color: var(--text-secondary);">For overcoming stagnation.</p>
                 <div class="product-name">Ignite Set</div>
-                <p style="margin-bottom: 15px;">$35.00</p>
-                <button class="btn btn-coming-soon" style="margin-top: auto;">Shop Now</button>
+                <div class="price-wrap">
+                    <span class="price-current">$35.00</span>
+                    <span class="price-old">$55.00</span>
+                </div>
+                <div class="scarcity-text">Only 4 left in stock</div>
+                <button class="btn btn-coming-soon" style="width: 100%;">Add to Cart</button>
             </div>
+            
             <div class="shop-card">
+                <div class="shop-img-wrapper">
+                    <div class="shop-tag">For Boundaries</div>
+                    <img src="https://images.unsplash.com/photo-1587313632749-2e06180ce6a8?q=80&w=600&auto=format&fit=crop" alt="Heart Bloom Set">
+                </div>
+                <div class="shop-stars">★★★★★</div>
                 <div class="intention-title">"I Seek Love"</div>
-                <p style="font-size: 0.85rem; color: var(--text-secondary);">For softening boundaries.</p>
                 <div class="product-name">Heart Bloom Set</div>
-                <p style="margin-bottom: 15px;">$35.00</p>
-                <button class="btn btn-coming-soon" style="margin-top: auto;">Shop Now</button>
+                <div class="price-wrap">
+                    <span class="price-current">$35.00</span>
+                    <span class="price-old">$55.00</span>
+                </div>
+                <button class="btn btn-coming-soon" style="width: 100%; margin-top: auto;">Add to Cart</button>
             </div>
             <div class="shop-card">
+                <div class="shop-img-wrapper">
+                    <div class="shop-tag">For Focus</div>
+                    <img src="https://images.unsplash.com/photo-1567113463300-102a7eb3cb26?q=80&w=600&auto=format&fit=crop" alt="Moon Flow Set">
+                </div>
+                <div class="shop-stars">★★★★★</div>
                 <div class="intention-title">"I Want Clarity"</div>
-                <p style="font-size: 0.85rem; color: var(--text-secondary);">For quieting mental noise.</p>
                 <div class="product-name">Moon Flow Set</div>
-                <p style="margin-bottom: 15px;">$35.00</p>
-                <button class="btn btn-coming-soon" style="margin-top: auto;">Shop Now</button>
+                <div class="price-wrap">
+                    <span class="price-current">$35.00</span>
+                    <span class="price-old">$55.00</span>
+                </div>
+                <button class="btn btn-coming-soon" style="width: 100%; margin-top: auto;">Add to Cart</button>
             </div>
             <div class="shop-card">
-                <div class="intention-title">"I Call in Abundance"</div>
-                <p style="font-size: 0.85rem; color: var(--text-secondary);">For grounding your ambitions.</p>
-                <div class="product-name">Prosperity Frequency</div>
-                <p style="margin-bottom: 15px;">$35.00</p>
-                <button class="btn btn-coming-soon" style="margin-top: auto;">Shop Now</button>
+                <div class="shop-img-wrapper">
+                    <div class="shop-tag">For Manifestation</div>
+                    <img src="https://images.unsplash.com/photo-1606822830843-cce47f023758?q=80&w=600&auto=format&fit=crop" alt="Prosperity Frequency">
+                </div>
+                <div class="shop-stars">★★★★★</div>
+                <div class="intention-title">"Call in Abundance"</div>
+                <div class="product-name">Prosperity Set</div>
+                <div class="price-wrap">
+                    <span class="price-current">$35.00</span>
+                    <span class="price-old">$55.00</span>
+                </div>
+                <div class="scarcity-text">Limit 2 per customer</div>
+                <button class="btn btn-coming-soon" style="width: 100%;">Add to Cart</button>
             </div>
         </div>
     </section>
-
-    <!-- 服务定价 -->
+    <!-- Pricing -->
     <section>
         <div class="section-header">
             <h2>Your Analysis Pathways</h2>
-            <p>Choose the depth of introspection you are ready for.</p>
         </div>
         <div class="pricing-grid">
             <div class="price-card">
                 <h3>Mini Energy Reading</h3>
                 <div class="price">$9.99</div>
-                <p style="font-size: 0.9rem; color: var(--text-secondary);">A brief overview of your core dominant element and basic traits.</p>
                 <ul class="features">
                     <li>Core Element Identification</li>
                     <li>Basic Strengths & Weaknesses</li>
@@ -485,13 +386,12 @@
             </div>
             <div class="price-card popular">
                 <div class="popular-badge">Most Popular</div>
+                <img src="https://images.unsplash.com/photo-1616422285623-13ff0162193c?q=80&w=600&auto=format&fit=crop" alt="Blueprint PDF Mockup" style="width: 100%; height: 180px; object-fit: cover; margin-bottom: 20px; border-radius: 2px; filter: grayscale(50%) contrast(120%);">
                 <h3>Personal Energetic Blueprint</h3>
                 <div class="price">$49.00</div>
-                <p style="font-size: 0.9rem; color: var(--text-secondary);">A comprehensive 20+ page psychological decoding of your BaZi chart.</p>
                 <ul class="features">
                     <li>Full Archetypal Profile</li>
                     <li>Relationship & Career Alignment</li>
-                    <li>Annual Energy Climate</li>
                     <li>Crystal Anchor Recommendations</li>
                 </ul>
                 <button class="btn btn-solid btn-coming-soon" style="width: 100%;">Select</button>
@@ -499,147 +399,81 @@
             <div class="price-card">
                 <h3>1-on-1 Alignment Session</h3>
                 <div class="price">$150+</div>
-                <p style="font-size: 0.9rem; color: var(--text-secondary);">A deep-dive 60-minute video consultation to navigate specific life blocks.</p>
                 <ul class="features">
                     <li>Everything in Blueprint</li>
                     <li>Live Q&A and Strategy</li>
-                    <li>Custom Energy Integration Plan</li>
+                    <li>Custom Energy Plan</li>
                 </ul>
                 <button class="btn btn-coming-soon" style="width: 100%;">Select</button>
             </div>
         </div>
     </section>
-
-    <!-- 信任�?-->
-    <section class="trust-section">
-        <div class="trust-grid">
-            <div>
-                <div class="trust-icon" role="img" aria-label="Sparkle icon">�?/div>
-                <h4 style="margin-bottom: 10px;">Psychological, Not Psychic</h4>
-                <p style="font-size: 0.9rem; color: var(--text-secondary);">We provide frameworks for introspection, not deterministic fortune-telling. Your free will remains yours.</p>
-            </div>
-            <div>
-                <div class="trust-icon" role="img" aria-label="Diamond sparkle icon">�?/div>
-                <h4 style="margin-bottom: 10px;">Ethically Sourced Anchors</h4>
-                <p style="font-size: 0.9rem; color: var(--text-secondary);">Our crystals are mined with respect for both the earth and the communities working the land.</p>
-            </div>
-            <div>
-                <div class="trust-icon" role="img" aria-label="Sparkle icon">�?/div>
-                <h4 style="margin-bottom: 10px;">Clarity Guarantee</h4>
-                <p style="font-size: 0.9rem; color: var(--text-secondary);">If your blueprint doesn't provide a profound sense of self-understanding within 30 days, we'll refund you.</p>
-            </div>
-        </div>
-        <div class="culture-statement">
-            "At Aura Atlas, we are deeply mindful of the origins of our frameworks. The Eastern energetic systems we reference are profound philosophies that have guided generations. We act as respectful translators, sharing this ancient archetypal wisdom as a tool for modern psychological empowerment."
-        </div>
-    </section>
-
-    <!-- 评价�?-->
+    <!-- UPGRADE 5: Masonry Testimonials -->
     <section>
         <div class="section-header">
             <h2>Cosmic Feedback</h2>
         </div>
-        <div class="testimonial-grid">
-            <div class="testimonial-card">
-                <div class="quote">"It didn't tell me my future; it explained my entire past. I finally understand why my relationships followed the same pattern."</div>
-                <div class="author">Sarah M. �?The "Flame" Blueprint</div>
+        <div class="testimonial-masonry">
+            <div class="tm-card">
+                <div class="tm-header">
+                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=100&auto=format&fit=crop" class="tm-avatar" alt="User">
+                    <div>
+                        <div class="tm-stars">★★★★★</div>
+                        <div class="tm-author">Sarah M.</div>
+                        <div class="tm-verified">✓ Verified Buyer</div>
+                    </div>
+                </div>
+                <div class="tm-quote">"It didn't tell me my future; it explained my entire past. I finally understand why my relationships followed the exact same toxic pattern."</div>
             </div>
-            <div class="testimonial-card">
-                <div class="quote">"As a skeptic, I expected vague astrology. What I got was a highly specific, grounded psychological profile that pinpointed my career burnout perfectly."</div>
-                <div class="author">Elena R. �?The "Metal" Blueprint</div>
+            <div class="tm-card">
+                <div class="tm-header">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=100&auto=format&fit=crop" class="tm-avatar" alt="User">
+                    <div>
+                        <div class="tm-stars">★★★★★</div>
+                        <div class="tm-author">Elena R.</div>
+                        <div class="tm-verified">✓ Verified Buyer</div>
+                    </div>
+                </div>
+                <div class="tm-quote">"As a hardcore skeptic, I expected vague astrology nonsense. What I got was a highly specific, grounded psychological profile that pinpointed my career burnout perfectly."</div>
             </div>
-            <div class="testimonial-card">
-                <div class="quote">"The Heart Bloom crystals sit on my desk. They aren't 'magic', but they are a constant, beautiful reminder of the boundaries my blueprint taught me to set."</div>
-                <div class="author">Jessica T. �?The "Water" Blueprint</div>
+            <div class="tm-card">
+                <div class="tm-header">
+                    <img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?q=80&w=100&auto=format&fit=crop" class="tm-avatar" alt="User">
+                    <div>
+                        <div class="tm-stars">★★★★★</div>
+                        <div class="tm-author">Jessica T.</div>
+                        <div class="tm-verified">✓ Verified Buyer</div>
+                    </div>
+                </div>
+                <div class="tm-quote">"The Heart Bloom crystals sit on my desk. They aren't 'magic', but they are a constant, beautiful visual reminder of the boundaries my blueprint taught me to set."</div>
             </div>
         </div>
     </section>
-
     <!-- FAQ -->
     <section id="about">
-        <div class="section-header">
-            <h2>Clarity & Transparency</h2>
-        </div>
+        <div class="section-header"><h2>Clarity & Transparency</h2></div>
         <div style="max-width: 800px; margin: 0 auto;">
             <div class="faq-item">
-                <button class="faq-question" aria-expanded="false">
-                    <span>Is this fortune telling? Will this predict my future?</span>
-                    <span class="faq-icon" aria-hidden="true">+</span>
-                </button>
-                <div class="faq-answer">
-                    Absolutely not. Fortune telling strips away your free will; an Energetic Blueprint restores it. We approach Eastern wisdom as a sophisticated psychological and archetypal framework, not a crystal ball. Our analysis does not dictate what will happen to you. Instead, it reveals the unique energetic patterns, natural strengths, and subconscious tendencies you were born with. We give you the map and the insight, but you are always the one holding the compass making the choices.
-                </div>
+                <button class="faq-question"><span>Is this fortune telling? Will this predict my future?</span><span class="faq-icon">+</span></button>
+                <div class="faq-answer">Absolutely not. Fortune telling strips away your free will; an Energetic Blueprint restores it. We approach Eastern wisdom as a sophisticated psychological and archetypal framework.</div>
             </div>
             <div class="faq-item">
-                <button class="faq-question" aria-expanded="false">
-                    <span>How long does it take to receive my Blueprint?</span>
-                    <span class="faq-icon" aria-hidden="true">+</span>
-                </button>
-                <div class="faq-answer">
-                    Your Personalized Energetic Blueprint is carefully generated and manually reviewed to ensure accuracy. You will receive your digital PDF directly in your inbox within 24 to 48 hours of purchase.
-                </div>
+                <button class="faq-question"><span>How long does it take to receive my Blueprint?</span><span class="faq-icon">+</span></button>
+                <div class="faq-answer">Your Personalized Energetic Blueprint is carefully generated and manually reviewed to ensure accuracy. You will receive your digital PDF directly in your inbox within 24 to 48 hours of purchase.</div>
             </div>
             <div class="faq-item">
-                <button class="faq-question" aria-expanded="false">
-                    <span>Are your crystals ethically sourced?</span>
-                    <span class="faq-icon" aria-hidden="true">+</span>
-                </button>
-                <div class="faq-answer">
-                    Yes. We work exclusively with small-scale, transparent mining operations that enforce fair labor practices and environmentally conscious extraction methods. We believe that the energy of a crystal is deeply tied to how it was sourced.
-                </div>
-            </div>
-            <div class="faq-item">
-                <button class="faq-question" aria-expanded="false">
-                    <span>What makes your Energetic Blueprint different from astrology?</span>
-                    <span class="faq-icon" aria-hidden="true">+</span>
-                </button>
-                <div class="faq-answer">
-                    While Western astrology focuses on planetary positions, our Energetic Blueprint is rooted in the Eastern BaZi system �?a sophisticated archetypal framework that maps the five elements present at your birth moment. Think of it less as a horoscope and more as a psychological profile based on ancient energy patterns. It doesn't tell you what will happen, but reveals the subconscious tendencies that shape how you respond to what happens.
-                </div>
-            </div>
-            <div class="faq-item">
-                <button class="faq-question" aria-expanded="false">
-                    <span>I don't know my exact birth time. Can I still get a reading?</span>
-                    <span class="faq-icon" aria-hidden="true">+</span>
-                </button>
-                <div class="faq-answer">
-                    Your birth date and year already provide a wealth of insight into your core energetic makeup. However, the birth hour adds an additional layer of depth �?particularly around your relationship patterns and inner emotional world. If you can find your birth time (check your birth certificate or ask a family member), we highly recommend including it. If not, we can still create a meaningful blueprint using the information you have.
-                </div>
+                <button class="faq-question"><span>What makes your Energetic Blueprint different from astrology?</span><span class="faq-icon">+</span></button>
+                <div class="faq-answer">While Western astrology focuses on planetary positions, our Energetic Blueprint is rooted in the Eastern BaZi system — a sophisticated archetypal framework that maps the five elements present at your birth moment. Think of it less as a horoscope and more as a psychological profile based on ancient energy patterns.</div>
             </div>
         </div>
     </section>
-
-    <!-- 页脚内容区块 -->
+    <!-- Footer Forms -->
     <section id="footer-content" style="padding-top: 0; padding-bottom: 20px;">
         <div class="footer-page-content">
-            <div id="privacy-policy" style="margin-bottom: 60px;">
-                <h3>Privacy Policy</h3>
-                <ul class="features" style="margin-top: 0;">
-                    <li>We collect email addresses and birth information solely for the purpose of generating your energy report and sending relevant updates.</li>
-                    <li>We never share or sell your personal data to third parties.</li>
-                    <li>You may request the deletion of your data at any time.</li>
-                    <li>This site uses basic cookies to optimize your browsing experience.</li>
-                </ul>
-            </div>
-
-            <div id="shipping-returns" style="margin-bottom: 60px;">
-                <h3>Shipping & Returns</h3>
-                <div style="margin-bottom: 20px;">
-                    <h4>Energetic Blueprints (Digital)</h4>
-                    <p>Digital products are delivered to your inbox within 24-48 hours. Due to their personalized nature, we do not offer refunds. However, if you are dissatisfied, we are happy to redo your blueprint once, free of charge.</p>
-                </div>
-                <div>
-                    <h4>Crystal Products (Physical)</h4>
-                    <p>We ship globally. Processing takes 1-3 business days, and shipping typically takes 7-21 business days. Standard shipping is $5, and orders over $75 qualify for free shipping. Returns or exchanges are accepted within 30 days of receipt, provided the items are unused.</p>
-                </div>
-            </div>
-
             <div id="contact-us">
                 <h3>Contact Us</h3>
-                <p style="margin-bottom: 10px;">Email: <a href="mailto:hello@auraatlas.com" style="color: var(--accent-gold);">hello@auraatlas.com</a></p>
-                <p style="margin-bottom: 30px;">We'd love to hear from you. Whether you have questions about your blueprint, want to learn more about our sourcing, or simply want to share your experience �?reach out anytime.</p>
-                
-                <form id="contact-form" style="display: flex; flex-direction: column; gap: 15px;">
+                <p style="margin-bottom: 30px; color: var(--text-secondary);">We'd love to hear from you. Reach out anytime.</p>
+                <form id="contact-form" style="display: flex; flex-direction: column;">
                     <input type="text" class="form-input" id="contact-name" placeholder="Your Name" required>
                     <input type="email" class="form-input" id="contact-email" placeholder="Your Email" required>
                     <textarea class="form-input" id="contact-message" placeholder="Your Message" rows="4" style="resize: vertical;" required></textarea>
@@ -648,14 +482,10 @@
             </div>
         </div>
     </section>
-
-    <!-- 页脚 -->
     <footer>
         <div class="footer-col">
             <h4 class="logo" style="margin-bottom: 10px;">AURA ATLAS</h4>
-            <p style="color: var(--text-secondary); font-size: 0.85rem; font-style: italic; max-width: 250px;">
-                Decoding energetic blueprints for the modern mind.
-            </p>
+            <p style="color: var(--text-secondary); font-size: 0.85rem; font-style: italic;">Decoding energetic blueprints for the modern mind.</p>
         </div>
         <div class="footer-col">
             <h4>Explore</h4>
@@ -663,383 +493,128 @@
             <a href="#shop">Crystal Anchors</a>
             <a href="#quiz">Energy Quiz</a>
         </div>
-        <div class="footer-col">
-            <h4>Support</h4>
-            <a href="#privacy-policy">Privacy Policy</a>
-            <a href="#shipping-returns">Shipping & Returns</a>
-            <a href="#contact-us">Contact Us</a>
-        </div>
-        <div class="copyright">
-            &copy; 2024 Aura Atlas. All rights reserved. Not a substitute for professional psychological or medical advice.
-        </div>
+        <div class="copyright">&copy; 2024 Aura Atlas. All rights reserved.</div>
     </footer>
-
-    <!-- Cookie 同意横幅 -->
-    <div id="cookie-banner">
-        <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0;">
-            We use cookies to optimize your experience. By continuing to use our site, you agree to our <a href="#privacy-policy" style="color: var(--accent-gold); text-decoration: underline;">Privacy Policy</a>.
-        </p>
-        <button class="btn" id="accept-cookies" style="padding: 8px 24px; font-size: 0.8rem;">Accept</button>
-    </div>
-
-    <!-- Toast 提示容器 -->
-    <div id="toast-container" aria-live="polite"></div>
-
-    <!-- 隐藏的控制台面板 (Ctrl+Shift+D 唤醒) -->
-    <div id="debug-panel">
-        <h3 style="margin-bottom: 10px; color: #fff;">System Debug Logs</h3>
-        <pre id="debug-log" style="white-space: pre-wrap; font-size: 0.8rem;"></pre>
-    </div>
-
-    <!-- 交互脚本 -->
+    <div id="toast-container"></div>
     <script>
-        // ================= Initialize EmailJS =================
-        (function() {
-            emailjs.init("cJCc855NyWlQaDuW6");
-        })();
-
-        document.addEventListener('DOMContentLoaded', () => {
-            
-            // ================= 1. 调试面板控制 =================
-            const debugPanel = document.getElementById('debug-panel');
-            const debugLog = document.getElementById('debug-log');
-            
-            function logDebug(msg) {
-                const time = new Date().toLocaleTimeString();
-                debugLog.innerText += `\n[${time}] ${msg}`;
-                debugPanel.scrollTop = debugPanel.scrollHeight;
-                console.log(`[AuraAtlas Debug] ${msg}`);
+        // Init EmailJS with correct template logic
+        (function() { emailjs.init("cJCc855NyWlQaDuW6"); })();
+        // Mobile Menu
+        const menuBtn = document.getElementById('menu-btn');
+        const navLinks = document.getElementById('nav-links');
+        menuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            document.body.classList.toggle('mobile-menu-open');
+            menuBtn.innerHTML = navLinks.classList.contains('active') ? '✕' : '☰';
+        });
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                navLinks.classList.remove('active'); document.body.classList.remove('mobile-menu-open'); menuBtn.innerHTML = '☰';
+            });
+        });
+        // Blueprint Accordion (UPGRADE 3)
+        function activateBp(el) {
+            document.querySelectorAll('.bp-item').forEach(item => {
+                item.classList.remove('active');
+                item.querySelector('.bp-desc').style.maxHeight = '0';
+                item.querySelector('.bp-desc').style.marginTop = '0';
+            });
+            el.classList.add('active');
+            el.querySelector('.bp-desc').style.maxHeight = '100px';
+            el.querySelector('.bp-desc').style.marginTop = '10px';
+        }
+        // FAQ
+        document.querySelectorAll('.faq-question').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const parent = this.parentElement;
+                const isActive = parent.classList.contains('active');
+                document.querySelectorAll('.faq-item').forEach(item => item.classList.remove('active'));
+                if (!isActive) parent.classList.add('active');
+            });
+        });
+        // Toast
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast ' + type;
+            const icon = type === 'success' ? '✓' : (type === 'error' ? '✕' : '✦');
+            toast.innerHTML = '<span style="font-weight:bold;">' + icon + '</span> <span>' + message + '</span>';
+            container.appendChild(toast);
+            setTimeout(() => { toast.classList.add('hide'); toast.addEventListener('animationend', () => toast.remove()); }, 3000);
+        }
+        // Quiz Logic
+        const QuizApp = {
+            scores: { Forest: 0, Flame: 0, Ocean: 0, Mountain: 0, Metal: 0 },
+            step: 1,
+            details: {
+                Forest: { title: "The Forest Energy", desc: "You are a natural creator, always growing toward the light. You resist rigid structures.", set: "Heart Bloom Set" },
+                Flame: { title: "The Flame Energy", desc: "Passionate, driven, and highly expressive. Your challenge is learning to sustain your fire.", set: "Ignite Set" },
+                Ocean: { title: "The Ocean Energy", desc: "Deeply intuitive. Your empathy is your superpower, but you need solitude to return to your baseline.", set: "Moon Flow Set" },
+                Mountain: { title: "The Mountain Energy", desc: "Stable, reliable, and grounding. You are the anchor in every group.", set: "Prosperity Frequency" },
+                Metal: { title: "The Metal Energy", desc: "Precise, strategic, and discerning. You cut through chaos with clarity.", set: "Prosperity Frequency" }
+            },
+            init() {
+                document.querySelectorAll('.quiz-option').forEach(b => b.addEventListener('click', e => this.answer(e.target.dataset.element)));
+                document.getElementById('retake-quiz-btn').addEventListener('click', () => this.retake());
+            },
+            answer(el) {
+                this.scores[el]++;
+                document.getElementById('step-' + this.step).classList.remove('active');
+                this.step++;
+                if (this.step <= 3) {
+                    document.getElementById('quiz-progress').innerText = 'Question ' + this.step + ' of 3';
+                    setTimeout(() => document.getElementById('step-' + this.step).classList.add('active'), 200);
+                } else this.showResult();
+            },
+            showResult() {
+                document.getElementById('quiz-questions').style.display = 'none';
+                let max = -1, dom = 'Flame';
+                for (const [e, s] of Object.entries(this.scores)) { if (s > max) { max = s; dom = e; } }
+                document.getElementById('result-title').innerText = this.details[dom].title;
+                document.getElementById('result-desc').innerText = this.details[dom].desc;
+                document.getElementById('result-set').innerText = this.details[dom].set;
+                setTimeout(() => document.getElementById('quiz-result').style.display = 'block', 200);
+            },
+            retake() {
+                for(let k in this.scores) this.scores[k]=0; this.step=1;
+                document.getElementById('quiz-result').style.display = 'none';
+                document.getElementById('quiz-questions').style.display = 'block';
+                document.getElementById('quiz-progress').innerText = 'Question 1 of 3';
+                document.querySelectorAll('.quiz-step').forEach(s => s.classList.remove('active'));
+                document.getElementById('step-1').classList.add('active');
+                const btn = document.getElementById('capture-btn'); btn.innerText='Unlock Full Blueprint'; btn.disabled=false;
             }
-
-            document.addEventListener('keydown', (e) => {
-                if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'd') {
-                    debugPanel.style.display = debugPanel.style.display === 'block' ? 'none' : 'block';
-                    logDebug("Debug panel toggled.");
-                }
-            });
-
-            // ================= 2. 导航与滚动交�?=================
-            const menuBtn = document.getElementById('menu-btn');
-            const navLinksContainer = document.getElementById('nav-links');
-            const navItems = document.querySelectorAll('.nav-item');
-            
-            menuBtn.addEventListener('click', () => {
-                const isActive = navLinksContainer.classList.toggle('active');
-                document.body.classList.toggle('mobile-menu-open');
-                menuBtn.innerHTML = isActive ? '�? : '�?;
-                menuBtn.setAttribute('aria-expanded', isActive);
-                logDebug(`Mobile menu ${isActive ? 'opened' : 'closed'}`);
-            });
-
-            navItems.forEach(item => {
-                item.addEventListener('click', () => {
-                    if (navLinksContainer.classList.contains('active')) {
-                        navLinksContainer.classList.remove('active');
-                        document.body.classList.remove('mobile-menu-open');
-                        menuBtn.innerHTML = '�?;
-                        menuBtn.setAttribute('aria-expanded', 'false');
-                    }
+        };
+        QuizApp.init();
+        // Forms with Correct Template ID
+        document.getElementById('capture-btn').addEventListener('click', async function() {
+            const email = document.getElementById('capture-email').value.trim();
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showToast("Enter a valid email", "error");
+            this.disabled = true; this.innerText = 'Sending...';
+            try {
+                await emailjs.send("service_q6jpfb8", "template_hkeyg60", { email: email });
+                showToast("Check your inbox!", "success"); this.innerText = 'Sent';
+            } catch (e) { this.disabled = false; this.innerText = 'Unlock Full Blueprint'; showToast("Failed to send", "error"); }
+        });
+        document.getElementById('contact-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('contact-submit');
+            btn.disabled = true; const orig = btn.innerText; btn.innerText = 'Sending...';
+            try {
+                await emailjs.send("service_q6jpfb8", "template_hkeyg60", {
+                    name: document.getElementById('contact-name').value, 
+                    email: document.getElementById('contact-email').value, 
+                    message: document.getElementById('contact-message').value
                 });
+                showToast("Message sent!", "success"); btn.innerText = 'Sent'; this.reset();
+            } catch (e) { btn.disabled = false; btn.innerText = orig; showToast("Failed to send", "error"); }
+        });
+        // Coming Soon
+        document.querySelectorAll('.btn-coming-soon').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault(); showToast("Coming soon!", "info");
             });
-
-            const sections = document.querySelectorAll('section[id]');
-            window.addEventListener('scroll', () => {
-                let currentId = '';
-                sections.forEach(section => {
-                    const sectionTop = section.offsetTop;
-                    if (pageYOffset >= (sectionTop - 150)) {
-                        currentId = section.getAttribute('id');
-                    }
-                });
-
-                navItems.forEach(item => {
-                    item.classList.remove('active');
-                    if (item.getAttribute('href') === `#${currentId}`) {
-                        item.classList.add('active');
-                    }
-                });
-            });
-
-            // ================= 3. Toast 提示系统 =================
-            function showToast(message, type = 'success') {
-                const container = document.getElementById('toast-container');
-                const toast = document.createElement('div');
-                toast.className = `toast ${type}`;
-                
-                const icon = type === 'success' ? '�? : (type === 'error' ? '�? : '�?);
-                toast.innerHTML = `<span style="font-weight:bold;">${icon}</span> <span>${message}</span>`;
-                
-                container.appendChild(toast);
-                logDebug(`Toast shown: [${type}] ${message}`);
-
-                setTimeout(() => {
-                    toast.classList.add('hide');
-                    toast.addEventListener('animationend', () => toast.remove());
-                }, 3000);
-            }
-
-            // ================= 4. Cookie 横幅 =================
-            if (!localStorage.getItem('cookieConsent')) {
-                setTimeout(() => {
-                    document.getElementById('cookie-banner').classList.add('show');
-                }, 1000);
-            }
-            document.getElementById('accept-cookies').addEventListener('click', () => {
-                localStorage.setItem('cookieConsent', 'true');
-                document.getElementById('cookie-banner').classList.remove('show');
-            });
-
-            // ================= 5. FAQ 手风�?=================
-            document.querySelectorAll('.faq-question').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const parent = this.parentElement;
-                    const isActive = parent.classList.contains('active');
-                    
-                    document.querySelectorAll('.faq-item').forEach(item => {
-                        item.classList.remove('active');
-                        item.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
-                    });
-                    
-                    if (!isActive) {
-                        parent.classList.add('active');
-                        this.setAttribute('aria-expanded', 'true');
-                    }
-                });
-            });
-
-            // ================= 6. 互动测试逻辑封装 =================
-            const QuizApp = {
-                scores: { Forest: 0, Flame: 0, Ocean: 0, Mountain: 0, Metal: 0 },
-                currentStep: 1,
-                totalSteps: 3,
-                details: {
-                    Forest: { title: "The Forest Energy", desc: "You are a natural creator, always growing toward the light. Your mind is fertile with ideas, and you thrive when given space to explore. You resist rigid structures and need freedom to fully bloom.", set: "Heart Bloom Set" },
-                    Flame: { title: "The Flame Energy", desc: "Passionate, driven, and highly expressive. You illuminate every room you enter and inspire others with your warmth. Your challenge is learning to sustain your fire without burning through your own reserves.", set: "Ignite Set" },
-                    Ocean: { title: "The Ocean Energy", desc: "Deeply intuitive and emotionally attuned, you sense what others miss. Your empathy is your superpower, but absorbing everyone's energy can leave you depleted. You need solitude to return to your own frequency.", set: "Moon Flow Set" },
-                    Mountain: { title: "The Mountain Energy", desc: "Stable, reliable, and grounding. You are the anchor in every group, providing structure and calm. Your challenge is allowing yourself to shift and evolve, rather than staying fixed in place out of comfort.", set: "Prosperity Frequency Set" },
-                    Metal: { title: "The Metal Energy", desc: "Precise, strategic, and discerning. You see the structure beneath the surface and cut through chaos with clarity. Your challenge is softening your edges to let connection in, rather than always standing apart.", set: "Prosperity Frequency Set" }
-                },
-
-                init() {
-                    document.querySelectorAll('.quiz-option').forEach(btn => {
-                        btn.addEventListener('click', (e) => {
-                            const el = e.target.getAttribute('data-element');
-                            this.answer(el);
-                        });
-                    });
-                    
-                    document.getElementById('retake-quiz-btn').addEventListener('click', () => this.retake());
-                    this.updateProgress();
-                },
-
-                updateProgress() {
-                    document.getElementById('quiz-progress').innerText = `Question ${this.currentStep} of ${this.totalSteps}`;
-                },
-
-                answer(element) {
-                    this.scores[element]++;
-                    logDebug(`Quiz Step ${this.currentStep} answered: ${element}`);
-                    
-                    const currentStepEl = document.getElementById(`step-${this.currentStep}`);
-                    currentStepEl.classList.remove('active');
-                    
-                    this.currentStep++;
-                    
-                    if (this.currentStep <= this.totalSteps) {
-                        this.updateProgress();
-                        setTimeout(() => {
-                            document.getElementById(`step-${this.currentStep}`).classList.add('active');
-                        }, 200);
-                    } else {
-                        this.calculateResult();
-                    }
-                },
-
-                calculateResult() {
-                    document.getElementById('quiz-questions').style.display = 'none';
-                    
-                    let maxScore = -1;
-                    let tiedElements = [];
-                    
-                    for (const [el, score] of Object.entries(this.scores)) {
-                        if (score > maxScore) {
-                            maxScore = score;
-                            tiedElements = [el];
-                        } else if (score === maxScore) {
-                            tiedElements.push(el);
-                        }
-                    }
-
-                    let dominant = tiedElements[Math.floor(Math.random() * tiedElements.length)];
-                    let finalDesc = this.details[dominant].desc;
-
-                    if (tiedElements.length > 1) {
-                        const others = tiedElements.filter(e => e !== dominant);
-                        finalDesc = `You strongly possess both ${dominant} and ${others.join(' & ')} traits, but your dominant frequency leans towards ${dominant}. ` + finalDesc;
-                        logDebug(`Quiz Tie detected between: ${tiedElements.join(',')}. Selected: ${dominant}`);
-                    }
-
-                    const resultData = this.details[dominant];
-                    document.getElementById('result-title').innerText = resultData.title;
-                    document.getElementById('result-desc').innerText = finalDesc;
-                    document.getElementById('result-set').innerText = resultData.set;
-                    
-                    setTimeout(() => {
-                        const resultEl = document.getElementById('quiz-result');
-                        resultEl.style.display = 'block';
-                        resultEl.style.opacity = '1';
-                        resultEl.style.animation = 'fadeUp 1s ease';
-                    }, 200);
-                },
-
-                retake() {
-                    logDebug("Quiz Retake triggered.");
-                    for (let key in this.scores) this.scores[key] = 0;
-                    this.currentStep = 1;
-                    
-                    document.getElementById('quiz-result').style.display = 'none';
-                    document.getElementById('quiz-questions').style.display = 'block';
-                    document.querySelectorAll('.quiz-step').forEach(s => s.classList.remove('active'));
-                    document.getElementById('step-1').classList.add('active');
-                    this.updateProgress();
-
-                    const btn = document.getElementById('capture-btn');
-                    btn.innerText = 'Unlock Full Blueprint';
-                    btn.disabled = false;
-                    btn.style = ''; 
-                    document.getElementById('capture-email').value = '';
-                    document.getElementById('email-success-note').style.display = 'none';
-                }
-            };
-
-            QuizApp.init();
-
-            // ================= 7. 表单�?EmailJS 逻辑 =================
-            
-            // 邮箱订阅 (Quiz 结果�?
-            document.getElementById('capture-btn').addEventListener('click', async function() {
-                const emailInput = document.getElementById('capture-email');
-                const email = emailInput.value.trim();
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-                if (!email || !emailRegex.test(email)) {
-                    showToast("Please enter a valid email.", "error");
-                    return;
-                }
-                
-                this.disabled = true;
-                const originalText = this.innerText;
-                this.innerText = 'Sending...';
-
-                try {
-                    await emailjs.send("service_q6jpfb8", "template_hkeyg60", {
-                        email: email
-                    });
-                    
-                    showToast("Check your inbox for your Blueprint!", "success");
-                    this.innerText = 'Thank you �?Blueprint on its way.';
-                    this.style.cssText = 'background-color: var(--border-subtle); border-color: var(--border-subtle); color: var(--text-secondary);';
-                    emailInput.value = '';
-                    document.getElementById('email-success-note').style.display = 'block';
-                    logDebug("EmailJS subscribe success: " + email);
-                    
-                } catch (error) {
-                    this.disabled = false;
-                    this.innerText = originalText;
-                    showToast("Failed to send. Please try again.", "error");
-                    logDebug("EmailJS subscribe error: " + JSON.stringify(error));
-                }
-            });
-
-            // 联系我们表单
-            document.getElementById('contact-form').addEventListener('submit', async function(e) {
-                e.preventDefault();
-                const name = document.getElementById('contact-name').value.trim();
-                const email = document.getElementById('contact-email').value.trim();
-                const message = document.getElementById('contact-message').value.trim();
-                const btn = document.getElementById('contact-submit');
-
-                btn.disabled = true;
-                const originalText = btn.innerText;
-                btn.innerText = 'Sending...';
-
-                try {
-                    await emailjs.send("service_q6jpfb8", "template_hkeyg60", {
-                        name: name,
-                        email: email,
-                        message: message
-                    });
-                    
-                    showToast("Message sent successfully!", "success");
-                    btn.innerText = 'Sent';
-                    btn.style.opacity = '0.5';
-                    this.reset(); 
-                    logDebug("EmailJS contact success: " + email);
-                    
-                } catch (error) {
-                    btn.disabled = false;
-                    btn.innerText = originalText;
-                    showToast("Failed to send message.", "error");
-                    logDebug("EmailJS contact error: " + JSON.stringify(error));
-                }
-            });
-
-            // ================= 8. “即将推出�?拦截功能 =================
-            document.querySelectorAll('.btn-coming-soon').forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    showToast("This feature is coming soon. Join our waitlist!", "info");
-                    
-                    if (!this.nextElementSibling || !this.nextElementSibling.classList.contains('waitlist-form')) {
-                        const form = document.createElement('div');
-                        form.className = 'waitlist-form';
-                        form.innerHTML = `
-                            <input type="email" placeholder="Enter your email to join waitlist" class="form-input" style="padding: 10px; font-size: 0.85rem;" required>
-                            <button class="btn btn-solid" style="padding: 10px; font-size: 0.8rem; width: 100%;">Join Waitlist</button>
-                        `;
-                        
-                        this.parentNode.insertBefore(form, this.nextSibling);
-                        this.style.display = 'none'; 
-                        form.style.display = 'flex'; 
-
-                        form.querySelector('button').addEventListener('click', async (evt) => {
-                            evt.preventDefault();
-                            const input = form.querySelector('input');
-                            if(!input.value || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value)) {
-                                showToast("Valid email required.", "error");
-                                return;
-                            }
-                            
-                            const wlBtn = evt.target;
-                            wlBtn.disabled = true;
-                            wlBtn.innerText = 'Joining...';
-                            
-                            try {
-                                await emailjs.send("service_q6jpfb8", "template_hkeyg60", {
-                                    email: input.value,
-                                    message: "Waitlist Join Request"
-                                });
-                                showToast("You're on the list!", "success");
-                                form.innerHTML = `<p style="color:var(--accent-gold); font-size:0.9rem; text-align:center; padding: 10px 0;">�?Waitlist Joined</p>`;
-                                logDebug("Waitlist joined: " + input.value);
-                            } catch(error) {
-                                wlBtn.disabled = false;
-                                wlBtn.innerText = 'Join Waitlist';
-                                showToast("Failed to join. Try again.", "error");
-                                logDebug("Waitlist error: " + JSON.stringify(error));
-                            }
-                        });
-                    }
-                });
-            });
-
-            logDebug("Aura Atlas core JS initialized successfully.");
         });
     </script>
 </body>
 </html>
-```
-
-你可以直接复制并在本地保存为 `index.html` 运行，测试表单发送功能。请测试看看！如果有问题我可以调整，如果功能正常，我们将为你展开最后一个环节—�?*TikTok 内容矩阵策划**�
-
-
